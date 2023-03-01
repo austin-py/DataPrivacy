@@ -28,7 +28,6 @@ class DataProcecssor():
         #Verify 
         self.__verify_numbers__()
 
-
     def __load_data__(self) -> pd.DataFrame:
         df = pd.read_csv('Data/survey-data.csv')
         df = df.fillna(-1)
@@ -59,4 +58,7 @@ class DataProcecssor():
         print('After splitting there are ', len(self.extroverts_who_got_extrovert_ad_targeted) + len(self.extroverts_who_got_extrovert_ad_untargeted) + len(self.extroverts_who_got_introvert_ad_targeted) + len(self.extroverts_who_got_introvert_ad_untargeted), ' extroverts')
 
         
+#TODO Iterate through each of the 8 lists and create a dictionary that holds the response counts for the last question 
+#TODO Take that and put it in an ANOVA test 
+#TODO Create graphs 
 dp = DataProcecssor()
