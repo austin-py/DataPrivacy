@@ -1,14 +1,13 @@
 import pandas as pd 
-import statsmodels.api as sm
-from statsmodels.formula.api import ols
 
 class DataProcecssor():
     def __init__(self) -> None:
-        self.data = self.__load_data__()
+        self.response_to_num = {'Extremely unlikely': 0, "Somewhat unlikely": 1,'Neither likely nor unlikely':2, 'Somewhat likely': 3, 'Extremely likely': 4 }
+        self.raw_data = self.__load_data__()
         self.ratings_w_rows = {"Introvert":[],"Extrovert":[],"Neutral":[],"Inconclusive":[]}
 
         #Iterate through and score the first 18 questions for each valid response, store score in self.ratings_w_rows()
-        for index, row in self.data.iterrows():
+        for index, row in self.raw_data.iterrows():
             if row['Status'] != 'IP Address':
                 continue
             score = self.__introvert_or_extrovert__(row)
@@ -28,6 +27,20 @@ class DataProcecssor():
         self.introverts_who_got_introvert_ad_targeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q34'] != -1]
         self.introverts_who_got_extrovert_ad_targeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q24'] != -1]
 
+        for i in self.introverts_who_got_introvert_ad_untargeted:
+            i['AdMatchedUnmatched'] = 1 # 1 means True, ad was matched 
+            i['TargetedUntargeted'] = 0 # 0 means False, untargeted 
+        for i in self.introverts_who_got_extrovert_ad_untargeted:
+            i['AdMatchedUnmatched'] = 0
+            i['TargetedUntargeted'] = 0
+        for i in self.introverts_who_got_introvert_ad_targeted:
+            i['AdMatchedUnmatched'] = 1
+            i['TargetedUntargeted'] = 1
+        for i in self.introverts_who_got_extrovert_ad_targeted:
+            i['AdMatchedUnmatched'] = 0
+            i['TargetedUntargeted'] = 1
+        
+
         self.introverts_who_got_introvert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.introverts_who_got_extrovert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.introverts_who_got_introvert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
@@ -41,11 +54,25 @@ class DataProcecssor():
         self.__combine_counts__(self.introverts_who_got_introvert_ad_targeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,result = self.introvert_who_got_introvert_counts)
         self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_extrovert_ad_untargeted_counts,result = self.introverts_who_got_extrovert_counts)
         self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_extrovert_ad_untargeted_counts,self.introverts_who_got_introvert_ad_targeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,self.introvert_counts)
+        
         #Split extroverts into 4 ad groups 
         self.extroverts_who_got_introvert_ad_untargeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q26'] != -1]
         self.extroverts_who_got_extrovert_ad_untargeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q25'] != -1]
         self.extroverts_who_got_introvert_ad_targeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q34'] != -1]
         self.extroverts_who_got_extrovert_ad_targeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q24'] != -1]
+
+        for i in self.extroverts_who_got_introvert_ad_untargeted:
+            i['AdMatchedUnmatched'] = 0
+            i['TargetedUntargeted'] = 0
+        for i in self.extroverts_who_got_extrovert_ad_untargeted:
+            i['AdMatchedUnmatched'] = 1
+            i['TargetedUntargeted'] = 0
+        for i in self.extroverts_who_got_introvert_ad_targeted:
+            i['AdMatchedUnmatched'] = 0
+            i['TargetedUntargeted'] = 1
+        for i in self.extroverts_who_got_extrovert_ad_targeted:
+            i['AdMatchedUnmatched'] = 1
+            i['TargetedUntargeted'] = 1
 
         self.extroverts_who_got_introvert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.extroverts_who_got_extrovert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
@@ -64,6 +91,8 @@ class DataProcecssor():
         #Verify 
         self.__verify_numbers__()
 
+        self.data = self.__create_dataframe__()
+
     def __load_data__(self) -> pd.DataFrame:
         df = pd.read_csv('Data/survey-data.csv')
         df = df.fillna(-1)
@@ -76,6 +105,7 @@ class DataProcecssor():
         step2 = [d[row['Q{}'.format(i)]] for i in [2,5,7,8,10,11,13,14,16,18]]
         if -1 in step1 or -1 in step2: 
             result = 'Inconclusive'
+            row['IntrovertExtrovert'] = result
             return result 
         intrversion = 40 + sum(step1) - sum(step2) 
         if intrversion > 24:  #TODO official was 28
@@ -84,6 +114,7 @@ class DataProcecssor():
             result = 'Extrovert'
         else:
             result = 'Neutral'
+        row['IntrovertExtrovert'] = result
         return result 
 
     def __verify_numbers__(self) -> None:
@@ -96,6 +127,7 @@ class DataProcecssor():
     def __count_responses__(self,rows,freqs, question) -> None:
         for row in rows: 
             freqs[row[question]] +=1
+            row['Response'] = self.response_to_num[row[question]]
         # print(freqs)
 
     def __combine_counts__(self,d1,d2,d3 = None ,d4 = None,result = None) -> None:
@@ -105,13 +137,8 @@ class DataProcecssor():
             else:
                 result[key] = d1[key] + d2[key]
 
-
-
-#Think we need to re-create a data frame with an 'Introvert' 'Extrovert' Column and their response to the question and then we compare on those two columns basically.
-
-
-
-
-#T test between introverts and extroverts in general 
-#T test between introverts who got introvert ad and extrovert ad 
-#T test between extroverts who got extrovert ad and introvert ad 
+    def __create_dataframe__(self) -> pd.DataFrame:
+        lst = self.introverts_who_got_introvert_ad_untargeted + self.introverts_who_got_extrovert_ad_untargeted + self.introverts_who_got_introvert_ad_targeted + self.introverts_who_got_extrovert_ad_targeted
+        lst = lst + self.extroverts_who_got_introvert_ad_untargeted + self.extroverts_who_got_extrovert_ad_untargeted + self.extroverts_who_got_introvert_ad_targeted + self.extroverts_who_got_extrovert_ad_targeted
+        df = pd.DataFrame(lst)
+        return df  
