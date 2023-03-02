@@ -1,6 +1,41 @@
 import pandas as pd 
 
 class DataProcecssor():
+    """
+    This class processes the data from our qualtrics survey for our 397 - Data Privacy Class 
+
+    All of the methods are private, but the following fields will be useful:
+    -  self.introvert_counts -> Response counts of all introverts
+    -  self.extrovert_counts -> Response counts of all extroverts 
+
+    -  self.introvert_who_got_introvert_counts -> Response counts of introverts who got the introverted ad 
+    -  self.extrovert_who_got_extrovert_counts  -> Response counts of extroverts who got the extroverted ad 
+    -  self.introverts_who_got_extrovert_counts -> Response counts of introverts who got the extroverted ad 
+    -  self.extrovert_who_got_introvert_counts -> Response counts of extroverts who got the introverted ad 
+
+    -  self.introverts_who_got_introvert_ad_untargeted_counts -> Response counts of introverts who got the introverted ad and were told it was untargeted
+    -  self.introverts_who_got_extrovert_ad_untargeted_counts -> Response counts of introverts who got the extroverted ad and were told it was utargeted
+    -  self.introverts_who_got_introvert_ad_targeted_counts -> Response counts of introverts who got the introverted ad and were told it was targeted
+    -  self.introverts_who_got_extrovert_ad_targeted_counts -> Response counts of introverts who got the extroverted ad and were told it was targeted
+    
+    -  self.extroverts_who_got_introvert_ad_untargeted_counts -> Response counts of extroverts who got the introverted ad and were told it was untargeted
+    -  self.extroverts_who_got_extrovert_ad_untargeted_counts -> Response counts of extroverts who got the extroverted ad and were told it was untargeted
+    -  self.extroverts_who_got_introvert_ad_targeted_counts -> Response counts of extroverts who got the introverted ad and were told it was targeted
+    -  self.extroverts_who_got_extrovert_ad_targeted_counts -> Response counts of extroverts who got the extroverted ad and were told it was targeted
+
+    -  self.introverts_who_got_introvert_ad_untargeted -> All data rows for introverts who got the introverted ad and were told it was untargeted
+    -  self.introverts_who_got_extrovert_ad_untargeted -> All data rows for introverts who got the extroverted ad and were told it was untargeted
+    -  self.introverts_who_got_introvert_ad_targeted  -> All data rows for introverts who got the introverted ad and were told it was targeted
+    -  self.introverts_who_got_extrovert_ad_targeted  -> All data rows for introverts who got the extroverted ad and were told it was targeted
+
+    -  self.extroverts_who_got_introvert_ad_untargeted -> All data rows for extroverts who got the introverted ad and were told it was untargeted
+    -  self.extroverts_who_got_extrovert_ad_untargeted -> All data rows for extroverts who got the extroverted ad and were told it was untargeted
+    -  self.extroverts_who_got_introvert_ad_targeted  -> All data rows for extroverts who got the introverted ad and were told it was targeted
+    -  self.extroverts_who_got_extrovert_ad_targeted  -> All data rows for extroverts who got the extroverted ad and were told it was targeted
+
+    - self.data -> A dataframe containing all valid rows with added columns [IntrovertExtrovert, AdMatchedUnmatched, TargetedUntargeted, 'Response'] 
+                   which stores values for statistical analysis purposes 
+    """
     def __init__(self) -> None:
         self.response_to_num = {'Extremely unlikely': 0, "Somewhat unlikely": 1,'Neither likely nor unlikely':2, 'Somewhat likely': 3, 'Extremely likely': 4 }
         self.raw_data = self.__load_data__()
@@ -13,6 +48,7 @@ class DataProcecssor():
             score = self.__introvert_or_extrovert__(row)
             self.ratings_w_rows[score].append(row)
 
+        #Set up some overarching groups 
         self.introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         
@@ -27,6 +63,7 @@ class DataProcecssor():
         self.introverts_who_got_introvert_ad_targeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q34'] != -1]
         self.introverts_who_got_extrovert_ad_targeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q24'] != -1]
 
+        #Add relevant fields 
         for i in self.introverts_who_got_introvert_ad_untargeted:
             i['AdMatchedUnmatched'] = 1 # 1 means True, ad was matched 
             i['TargetedUntargeted'] = 0 # 0 means False, untargeted 
@@ -61,6 +98,7 @@ class DataProcecssor():
         self.extroverts_who_got_introvert_ad_targeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q34'] != -1]
         self.extroverts_who_got_extrovert_ad_targeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q24'] != -1]
 
+        #Add relevant fields 
         for i in self.extroverts_who_got_introvert_ad_untargeted:
             i['AdMatchedUnmatched'] = 0
             i['TargetedUntargeted'] = 0
@@ -91,6 +129,7 @@ class DataProcecssor():
         #Verify 
         self.__verify_numbers__()
 
+        #Create dataframe with new attributes included
         self.data = self.__create_dataframe__()
 
     def __load_data__(self) -> pd.DataFrame:
