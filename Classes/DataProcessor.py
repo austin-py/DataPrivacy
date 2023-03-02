@@ -1,4 +1,6 @@
 import pandas as pd 
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
 
 class DataProcecssor():
     def __init__(self) -> None:
@@ -14,7 +16,12 @@ class DataProcecssor():
 
         self.introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-
+        
+        self.introvert_who_got_introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extrovert_who_got_extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extrovert_who_got_introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        
         #Split introverts into the 4 ad groups 
         self.introverts_who_got_introvert_ad_untargeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q26'] != -1]
         self.introverts_who_got_extrovert_ad_untargeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q25'] != -1]
@@ -31,6 +38,8 @@ class DataProcecssor():
         self.__count_responses__(self.introverts_who_got_introvert_ad_targeted,self.introverts_who_got_introvert_ad_targeted_counts, 'Q34')
         self.__count_responses__(self.introverts_who_got_extrovert_ad_targeted,self.introverts_who_got_extrovert_ad_targeted_counts, 'Q24')
 
+        self.__combine_counts__(self.introverts_who_got_introvert_ad_targeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,result = self.introvert_who_got_introvert_counts)
+        self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_extrovert_ad_untargeted_counts,result = self.introverts_who_got_extrovert_counts)
         self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_extrovert_ad_untargeted_counts,self.introverts_who_got_introvert_ad_targeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,self.introvert_counts)
         #Split extroverts into 4 ad groups 
         self.extroverts_who_got_introvert_ad_untargeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q26'] != -1]
@@ -48,6 +57,8 @@ class DataProcecssor():
         self.__count_responses__(self.extroverts_who_got_introvert_ad_targeted,self.extroverts_who_got_introvert_ad_targeted_counts, 'Q34')
         self.__count_responses__(self.extroverts_who_got_extrovert_ad_targeted,self.extroverts_who_got_extrovert_ad_targeted_counts, 'Q24')
 
+        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_untargeted_counts, result = self.extrovert_who_got_extrovert_counts)
+        self.__combine_counts__(self.extroverts_who_got_introvert_ad_targeted_counts, self.extroverts_who_got_introvert_ad_untargeted_counts, result = self.extrovert_who_got_introvert_counts)
         self.__combine_counts__(self.extroverts_who_got_introvert_ad_untargeted_counts,self.extroverts_who_got_introvert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_untargeted_counts,self.extrovert_counts)
 
         #Verify 
@@ -87,16 +98,20 @@ class DataProcecssor():
             freqs[row[question]] +=1
         # print(freqs)
 
-    def __run_anova__(self) -> list:
-        pass 
-
-    def __combine_counts__(self,d1,d2,d3,d4,result) -> None:
+    def __combine_counts__(self,d1,d2,d3 = None ,d4 = None,result = None) -> None:
         for key in result.keys():
-            result[key] = d1[key] + d2[key] + d3[key] + d4[key]
+            if d3 and d4:
+                result[key] = d1[key] + d2[key] + d3[key] + d4[key]
+            else:
+                result[key] = d1[key] + d2[key]
 
-#TODO Take that and put it in an ANOVA test 
-#TODO Create graphs 
-dp = DataProcecssor()
+
+
+#Think we need to re-create a data frame with an 'Introvert' 'Extrovert' Column and their response to the question and then we compare on those two columns basically.
+
+
 
 
 #T test between introverts and extroverts in general 
+#T test between introverts who got introvert ad and extrovert ad 
+#T test between extroverts who got extrovert ad and introvert ad 
