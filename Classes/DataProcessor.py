@@ -11,7 +11,9 @@ class DataProcecssor():
                 continue
             score = self.__introvert_or_extrovert__(row)
             self.ratings_w_rows[score].append(row)
-        
+
+        self.introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
 
         #Split introverts into the 4 ad groups 
         self.introverts_who_got_introvert_ad_untargeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q26'] != -1]
@@ -19,11 +21,34 @@ class DataProcecssor():
         self.introverts_who_got_introvert_ad_targeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q34'] != -1]
         self.introverts_who_got_extrovert_ad_targeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q24'] != -1]
 
+        self.introverts_who_got_introvert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_extrovert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_introvert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_extrovert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+
+        self.__count_responses__(self.introverts_who_got_introvert_ad_untargeted,self.introverts_who_got_introvert_ad_untargeted_counts, 'Q26')
+        self.__count_responses__(self.introverts_who_got_extrovert_ad_untargeted,self.introverts_who_got_extrovert_ad_untargeted_counts, 'Q25')
+        self.__count_responses__(self.introverts_who_got_introvert_ad_targeted,self.introverts_who_got_introvert_ad_targeted_counts, 'Q34')
+        self.__count_responses__(self.introverts_who_got_extrovert_ad_targeted,self.introverts_who_got_extrovert_ad_targeted_counts, 'Q24')
+
+        self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_extrovert_ad_untargeted_counts,self.introverts_who_got_introvert_ad_targeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,self.introvert_counts)
         #Split extroverts into 4 ad groups 
         self.extroverts_who_got_introvert_ad_untargeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q26'] != -1]
         self.extroverts_who_got_extrovert_ad_untargeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q25'] != -1]
         self.extroverts_who_got_introvert_ad_targeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q34'] != -1]
         self.extroverts_who_got_extrovert_ad_targeted = [i for i in self.ratings_w_rows['Extrovert'] if i['Q24'] != -1]
+
+        self.extroverts_who_got_introvert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_extrovert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_introvert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_extrovert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+
+        self.__count_responses__(self.extroverts_who_got_introvert_ad_untargeted,self.extroverts_who_got_introvert_ad_untargeted_counts, 'Q26')
+        self.__count_responses__(self.extroverts_who_got_extrovert_ad_untargeted,self.extroverts_who_got_extrovert_ad_untargeted_counts, 'Q25')
+        self.__count_responses__(self.extroverts_who_got_introvert_ad_targeted,self.extroverts_who_got_introvert_ad_targeted_counts, 'Q34')
+        self.__count_responses__(self.extroverts_who_got_extrovert_ad_targeted,self.extroverts_who_got_extrovert_ad_targeted_counts, 'Q24')
+
+        self.__combine_counts__(self.extroverts_who_got_introvert_ad_untargeted_counts,self.extroverts_who_got_introvert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_untargeted_counts,self.extrovert_counts)
 
         #Verify 
         self.__verify_numbers__()
@@ -57,8 +82,21 @@ class DataProcecssor():
 
         print('After splitting there are ', len(self.extroverts_who_got_extrovert_ad_targeted) + len(self.extroverts_who_got_extrovert_ad_untargeted) + len(self.extroverts_who_got_introvert_ad_targeted) + len(self.extroverts_who_got_introvert_ad_untargeted), ' extroverts')
 
-        
-#TODO Iterate through each of the 8 lists and create a dictionary that holds the response counts for the last question 
+    def __count_responses__(self,rows,freqs, question) -> None:
+        for row in rows: 
+            freqs[row[question]] +=1
+        # print(freqs)
+
+    def __run_anova__(self) -> list:
+        pass 
+
+    def __combine_counts__(self,d1,d2,d3,d4,result) -> None:
+        for key in result.keys():
+            result[key] = d1[key] + d2[key] + d3[key] + d4[key]
+
 #TODO Take that and put it in an ANOVA test 
 #TODO Create graphs 
 dp = DataProcecssor()
+
+
+#T test between introverts and extroverts in general 
