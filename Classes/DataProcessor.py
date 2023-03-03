@@ -49,13 +49,13 @@ class DataProcecssor():
             self.ratings_w_rows[score].append(row)
 
         #Set up some overarching groups 
-        self.introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introvert_counts = {'Name': 'Introverts', 'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extrovert_counts = {'Name': 'Extroverts', 'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         
-        self.introvert_who_got_introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.extrovert_who_got_extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.introverts_who_got_extrovert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.extrovert_who_got_introvert_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introvert_who_got_introvert_counts = {'Name': 'IntrovertsWhoGotIntrovertAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extrovert_who_got_extrovert_counts = {'Name': 'ExtrovertsWhoGotExtrovertAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_extrovert_counts = {'Name': 'IntrovertsWhoGotExtrovertAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extrovert_who_got_introvert_counts = {'Name': 'ExtrovertsWhoGotIntrovertAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         
         #Split introverts into the 4 ad groups 
         self.introverts_who_got_introvert_ad_untargeted = [i for i in self.ratings_w_rows['Introvert'] if i['Q26'] != -1]
@@ -78,10 +78,10 @@ class DataProcecssor():
             i['TargetedUntargeted'] = 1
         
 
-        self.introverts_who_got_introvert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.introverts_who_got_extrovert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.introverts_who_got_introvert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.introverts_who_got_extrovert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_introvert_ad_untargeted_counts = {'Name': 'IntrovertsWhoGotUntargetedtIntrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_extrovert_ad_untargeted_counts = {'Name': 'IntrovertsWhoGotUntargetedtExtrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_introvert_ad_targeted_counts = {'Name': 'IntrovertsWhoGotTargetedtIntrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.introverts_who_got_extrovert_ad_targeted_counts = {'Name': 'IntrovertsWhoGotTargetedtExtrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
 
         self.__count_responses__(self.introverts_who_got_introvert_ad_untargeted,self.introverts_who_got_introvert_ad_untargeted_counts, 'Q26')
         self.__count_responses__(self.introverts_who_got_extrovert_ad_untargeted,self.introverts_who_got_extrovert_ad_untargeted_counts, 'Q25')
@@ -112,10 +112,10 @@ class DataProcecssor():
             i['AdMatchedUnmatched'] = 1
             i['TargetedUntargeted'] = 1
 
-        self.extroverts_who_got_introvert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.extroverts_who_got_extrovert_ad_untargeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.extroverts_who_got_introvert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.extroverts_who_got_extrovert_ad_targeted_counts = {'Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_introvert_ad_untargeted_counts = {'Name': 'ExtrovertsWhoGotUntargetedtIntrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_extrovert_ad_untargeted_counts = {'Name': 'ExtrovertsWhoGotUntargetedtExtrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_introvert_ad_targeted_counts = {'Name': 'ExtrovertsWhoGotTargetedtIntrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
+        self.extroverts_who_got_extrovert_ad_targeted_counts = {'Name': 'ExtrovertsWhoGotTargetedtExtrovertedAd','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
 
         self.__count_responses__(self.extroverts_who_got_introvert_ad_untargeted,self.extroverts_who_got_introvert_ad_untargeted_counts, 'Q26')
         self.__count_responses__(self.extroverts_who_got_extrovert_ad_untargeted,self.extroverts_who_got_extrovert_ad_untargeted_counts, 'Q25')
@@ -127,7 +127,7 @@ class DataProcecssor():
         self.__combine_counts__(self.extroverts_who_got_introvert_ad_untargeted_counts,self.extroverts_who_got_introvert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_targeted_counts,self.extroverts_who_got_extrovert_ad_untargeted_counts,self.extrovert_counts)
 
         #Verify 
-        self.__verify_numbers__()
+        # self.__verify_numbers__()
 
         #Create dataframe with new attributes included
         self.data = self.__create_dataframe__()
@@ -157,11 +157,11 @@ class DataProcecssor():
         return result 
 
     def __verify_numbers__(self) -> None:
-        print('There are ',len(self.ratings_w_rows['Introvert']), ' introverts before splitting\n','There are ', len(self.ratings_w_rows['Extrovert']), ' Extroverts before splitting \n','There are ', len(self.ratings_w_rows['Neutral']), ' Neutral people before splitting \n')
+        print('\nThere are ',len(self.ratings_w_rows['Introvert']), ' introverts before splitting\n','There are ', len(self.ratings_w_rows['Extrovert']), ' Extroverts before splitting \n','There are ', len(self.ratings_w_rows['Neutral']), ' Neutral people before splitting \n')
 
         print('After splitting there are ', len(self.introverts_who_got_extrovert_ad_targeted) + len(self.introverts_who_got_introvert_ad_targeted) + len(self.introverts_who_got_introvert_ad_untargeted) + len(self.introverts_who_got_extrovert_ad_untargeted), ' introverts')
 
-        print('After splitting there are ', len(self.extroverts_who_got_extrovert_ad_targeted) + len(self.extroverts_who_got_extrovert_ad_untargeted) + len(self.extroverts_who_got_introvert_ad_targeted) + len(self.extroverts_who_got_introvert_ad_untargeted), ' extroverts')
+        print('After splitting there are ', len(self.extroverts_who_got_extrovert_ad_targeted) + len(self.extroverts_who_got_extrovert_ad_untargeted) + len(self.extroverts_who_got_introvert_ad_targeted) + len(self.extroverts_who_got_introvert_ad_untargeted), ' extroverts\n')
 
     def __count_responses__(self,rows,freqs, question) -> None:
         for row in rows: 
@@ -171,6 +171,8 @@ class DataProcecssor():
 
     def __combine_counts__(self,d1,d2,d3 = None ,d4 = None,result = None) -> None:
         for key in result.keys():
+            if key == 'Name':
+                continue
             if d3 and d4:
                 result[key] = d1[key] + d2[key] + d3[key] + d4[key]
             else:

@@ -13,13 +13,15 @@ def __convert_freqs_to_list_of_nums__(dp,lst):
                 result.append(dp.response_to_num[key])
     return result 
 
+#ANOVA 
+
 dp = DataProcecssor()
 
 model = ols("""Response ~ C(IntrovertExtrovert) + C(AdMatchedUnmatched) + C(TargetedUntargeted)
             + C(IntrovertExtrovert):C(AdMatchedUnmatched) + C(IntrovertExtrovert):C(TargetedUntargeted) + C(AdMatchedUnmatched):C(TargetedUntargeted)
             + C(IntrovertExtrovert):C(AdMatchedUnmatched):C(TargetedUntargeted)""", data = dp.data).fit()
 
-results = sm.stats.anova_lm(model, typ=2)
+anova_results = sm.stats.anova_lm(model, typ=2)
 
 # print(results)
 
@@ -34,19 +36,41 @@ P ~ 0.18 for Targeted Untargeted so this didn't seem to have a huge effect
 
 """
 
+#T-Tests
+dicts = [dp.extrovert_counts,
+         dp.introvert_counts,
+         dp.introvert_who_got_introvert_counts,
+         dp.extrovert_who_got_extrovert_counts,
+         dp.introverts_who_got_extrovert_counts,
+         dp.extrovert_who_got_introvert_counts,
+         dp.introverts_who_got_introvert_ad_untargeted_counts,
+         dp.introverts_who_got_extrovert_ad_untargeted_counts,
+         dp.introverts_who_got_introvert_ad_targeted_counts,
+         dp.introverts_who_got_extrovert_ad_targeted_counts,
+         dp.extroverts_who_got_introvert_ad_untargeted_counts,
+         dp.extroverts_who_got_extrovert_ad_untargeted_counts,
+         dp.extroverts_who_got_introvert_ad_targeted_counts,
+         dp.extroverts_who_got_extrovert_ad_targeted_counts,
+         #TODO add any other dictionaries we add here 
+         ]
+t_test_results = {}
+
+for d1 in dicts:
+    for d2 in dicts:
+        vals_d1 = __convert_freqs_to_list_of_nums__(dp,d1)
+        vals_d2 = __convert_freqs_to_list_of_nums__(dp,d2)
+        f, p = f_oneway(vals_d1,vals_d2)
+        test_name = d1['Name'] + ' vs. ' + d2['Name']
+        t_test_results[test_name] = {'f': f, 'p': p}
 
 
 
-test = __convert_freqs_to_list_of_nums__(dp,dp.extrovert_counts)
-test2 = __convert_freqs_to_list_of_nums__(dp, dp.introvert_counts)
+#Uncomment below to print the tests that met at 0.05 significance level: 
 
-f, p = f_oneway(test,test2)
-# print(f,p)
 
-"""
-P value is significance 
-"""
-
+# for i in t_test_results.keys():
+    # if t_test_results[i]['p'] <= 0.05:
+        # print(i, '     ', t_test_results[i])
 
 
 
