@@ -148,33 +148,33 @@ class DataProcecssor():
         # self.__verify_numbers__()
         self.extroverts_who_got_targeted_counts = {'Name': 'ExtrovertsWhoGotTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.introverts_who_got_targeted_counts = {'Name': 'IntrovertsWhoGotTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_targeted_counts,self.extroverts_who_got_introvert_ad_targeted_counts,self.extroverts_who_got_targeted_counts)
-        self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_introvert_ad_targeted_counts,self.introverts_who_got_targeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_targeted_counts,self.extroverts_who_got_introvert_ad_targeted_counts,result = self.extroverts_who_got_targeted_counts)
+        self.__combine_counts__(self.introverts_who_got_extrovert_ad_targeted_counts,self.introverts_who_got_introvert_ad_targeted_counts,result = self.introverts_who_got_targeted_counts)
 
         self.extroverts_who_got_untargeted_counts = {'Name': 'ExtrovertsWhoGotUnTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.introverts_who_got_untargeted_counts = {'Name': 'IntrovertsWhoGotUnTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_untargeted_counts,self.extroverts_who_got_introvert_ad_untargeted_counts,self.extroverts_who_got_untargeted_counts)
-        self.__combine_counts__(self.introverts_who_got_extrovert_ad_untargeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,self.introverts_who_got_untargeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_untargeted_counts,self.extroverts_who_got_introvert_ad_untargeted_counts,result = self.extroverts_who_got_untargeted_counts)
+        self.__combine_counts__(self.introverts_who_got_extrovert_ad_untargeted_counts,self.introverts_who_got_introvert_ad_untargeted_counts,result = self.introverts_who_got_untargeted_counts)
 
         self.targeted_counts = {'Name': 'Targeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.untargeted_counts = {'Name': 'UnTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.__combine_counts__(self.extroverts_who_got_targeted_counts,self.introverts_who_got_targeted_counts,self.targeted_counts)
-        self.__combine_counts__(self.extroverts_who_got_untargeted_counts,self.introverts_who_got_untargeted_counts,self.untargeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_targeted_counts,self.introverts_who_got_targeted_counts,result = self.targeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_untargeted_counts,self.introverts_who_got_untargeted_counts,result = self.untargeted_counts)
 
         self.matched_untargeted_counts = {'Name': 'MatchedUnTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.matched_targeted_counts = {'Name': 'MatchedTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_untargeted_counts, self.introverts_who_got_introvert_ad_untargeted_counts,self.matched_untargeted_counts)
-        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_targeted_counts, self.introverts_who_got_introvert_ad_targeted_counts,self.matched_targeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_untargeted_counts, self.introverts_who_got_introvert_ad_untargeted_counts,result = self.matched_untargeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_extrovert_ad_targeted_counts, self.introverts_who_got_introvert_ad_targeted_counts,result = self.matched_targeted_counts)
 
         self.unmatched_untargeted_counts = {'Name': 'UnMatchedUnTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
         self.unmatched_targeted_counts = {'Name': 'UnMatchedTargeted','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.__combine_counts__(self.extroverts_who_got_introvert_ad_untargeted_counts, self.introverts_who_got_extrovert_ad_untargeted_counts,self.unmatched_untargeted_counts)
-        self.__combine_counts__(self.extroverts_who_got_introvert_ad_targeted_counts, self.introverts_who_got_extrovert_ad_targeted_counts,self.unmatched_targeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_introvert_ad_untargeted_counts, self.introverts_who_got_extrovert_ad_untargeted_counts,result = self.unmatched_untargeted_counts)
+        self.__combine_counts__(self.extroverts_who_got_introvert_ad_targeted_counts, self.introverts_who_got_extrovert_ad_targeted_counts,result = self.unmatched_targeted_counts)
 
         self.matched_counts = {'Name': 'Matched','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 } 
         self.unmatched_counts = {'Name': 'UnMatched','Extremely unlikely': 0, "Somewhat unlikely": 0,'Neither likely nor unlikely':0, 'Somewhat likely': 0, 'Extremely likely': 0 }
-        self.__combine_counts__(self.matched_targeted_counts,self.matched_untargeted_counts,self.matched_counts)
-        self.__combine_counts__(self.unmatched_targeted_counts,self.unmatched_untargeted_counts,self.unmatched_counts)
+        self.__combine_counts__(self.matched_targeted_counts,self.matched_untargeted_counts,result = self.matched_counts)
+        self.__combine_counts__(self.unmatched_targeted_counts,self.unmatched_untargeted_counts,result = self.unmatched_counts)
         #Create dataframe with new attributes included
         self.data = self.__create_dataframe__()
 
