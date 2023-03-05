@@ -64,12 +64,10 @@ for d1 in dicts:
         t_test_results[test_name] = {'f': f, 'p': p}
 
 
-
-#Uncomment below to print the tests that met at 0.05 significance level: 
-
-
-# for i in t_test_results.keys():
-    # if t_test_results[i]['p'] <= 0.05:
+significant_test_reults = {}
+for i in t_test_results.keys():
+    if t_test_results[i]['p'] <= 0.05:
+        significant_test_reults[i] = t_test_results[i]
         # print(i, '     ', t_test_results[i])
 
 
